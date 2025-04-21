@@ -134,8 +134,30 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
 
-#Adiciona o rabbitmq como broker para o celery
-CELERY_BROKER_URL = 'amqps://zotlibhf:XororLqiJteFzN5lh_AhbYrk6yO8XWUG@toucan.lmq.cloudamqp.com/zotlibhf'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #Se estiver localmente rodar localhost no lugar de rabbitmq
+
+
+
+CELERY_BROKER_URL = 'amqp://zotlibhf:XororLqiJteFzN5lh_AhbYrk6yO8XWUG@toucan.lmq.cloudamqp.com/zotlibhf'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_IGNORE_RESULT = False
+
+
+
+from kombu import Queue
+
+CELERY_QUEUES = (
+    Queue('usuarioQueue', routing_key='usuarioQueue'),
+)
+
+CELERY_TASK_ROUTES = {
+    'usuarioQueue': {
+        'queue': 'usuarioQueue',
+        'routing_key': 'usuarioQueue', 
+    },
+}
+
+CELERY_TASK_DEFAULT_QUEUE = 'usuarioQueue'
+CELERY_TASK_DEFAULT_EXCHANGE = 'usuarioExchange'
+CELERY_TASK_DEFAULT_ROUTING_KEY = 'usuarioQueue'
